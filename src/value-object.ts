@@ -1,11 +1,7 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { type DeepReadonly, parseSync } from './utils';
 
-export abstract class S<Schema extends StandardSchemaV1> {
-    abstract schema: Schema;
-}
-
-export const defineValueObjectClass = <Schema extends StandardSchemaV1>(
+export const defineValueObject = <Schema extends StandardSchemaV1>(
     schema:
         | Schema
         | ((isCurrentValueObject: (target: unknown) => boolean) => Schema)
@@ -30,9 +26,12 @@ export const defineValueObjectClass = <Schema extends StandardSchemaV1>(
             Object.defineProperty(this, classSymbol, { value: true });
         }
 
-        static is = (target: unknown): boolean => {
+        static is<T extends abstract new (...args: any[]) => any>(
+            this: T,
+            target: unknown
+        ): target is InstanceType<T> {
             return isThisClass(target);
-        };
+        }
 
         get model() {
             const thisWithSymbol = this as unknown as {

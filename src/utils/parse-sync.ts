@@ -15,10 +15,7 @@ export function parseSync<S extends StandardSchemaV1>(
     }
 
     if ('issues' in result && result.issues) {
-        throw new InvalidDataParsingError({
-            parsingIssues: result.issues,
-            value
-        });
+        throw new InvalidDataParsingError({ parsingIssues: result.issues, value });
     }
 
     return result.value;

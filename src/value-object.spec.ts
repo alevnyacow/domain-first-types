@@ -1,9 +1,9 @@
 import { expect, test } from '@rstest/core';
 import z from 'zod';
 import { InvalidDataParsingError } from './errors';
-import { defineValueObjectClass } from './value-object';
+import { defineValueObject } from './value-object';
 
-class Pagination extends defineValueObjectClass(
+class Pagination extends defineValueObject(
     z.object({
         pageSize: z.int().positive(),
         pageIndex: z.int().positive()
@@ -29,8 +29,17 @@ test('d', () => {
         pageIndex: 2,
         pageSize: 10
     });
+
+    const a = null as any;
+    if (Pagination.is(a)) {
+        a.nextPage.model;
+    }
+
     const firstPage = secondPage.previousPage;
-    expect(firstPage.model).toEqual({ pageIndex: 1, pageSize: 10 });
+    expect(firstPage.model).toStrictEqual({
+        pageIndex: 1,
+        pageSize: 10
+    });
     try {
         const _invalidZeroPage = firstPage.previousPage;
     } catch (e: unknown) {
