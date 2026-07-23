@@ -1,6 +1,6 @@
 {
     "name": "@domain-first/types",
-    "description": "Type-safe Entities and Value Objects with Standard Schema validation",
+    "description": "Type-safe Entities and Value Objects powered by Standard Schema",
     "license": "MIT",
     "keywords": [
         "entity",
