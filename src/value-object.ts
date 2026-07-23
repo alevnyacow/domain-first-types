@@ -1,6 +1,5 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
-import type { DeepReadonly } from './types';
-import { parseAsync, parseSync } from './utils';
+import { type DeepReadonly, parseAsync, parseSync } from './utils';
 
 export abstract class S<Schema extends StandardSchemaV1> {
     abstract schema: Schema;
