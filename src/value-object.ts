@@ -1,17 +1,45 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
-import { StructuredCloneNotFoundError } from './errors';
+import type { DeepReadonly } from './types';
 import { parseAsync, parseSync } from './utils';
 
+export abstract class S<Schema extends StandardSchemaV1> {
+    abstract schema: Schema;
+}
+
 export const defineValueObjectClass = <Schema extends StandardSchemaV1>(
-    schema: Schema
+    schema:
+        | Schema
+        | ((isCurrentValueObject: (target: unknown) => boolean) => Schema)
 ) => {
     const modelSymbol = Symbol();
+    const classSymbol = Symbol();
+
+    const isThisClass = (target: unknown): boolean => {
+        return !!target && typeof target === 'object' && classSymbol in target;
+    };
 
     class ValueObject {
-        public static schema = schema;
+        public static readonly schema =
+            typeof schema === 'function' ? schema(isThisClass) : schema;
 
-        protected constructor(data: StandardSchemaV1.InferOutput<Schema>) {
-            Object.defineProperty(this, modelSymbol, { value: data });
+        constructor(data: StandardSchemaV1.InferOutput<Schema>) {
+            const parsedData = parseSync(ValueObject.schema, data);
+
+            Object.defineProperty(this, modelSymbol, {
+                value: parsedData
+            });
+            Object.defineProperty(this, classSymbol, { value: true });
+        }
+
+        static is = (target: unknown): boolean => {
+            return isThisClass(target);
+        };
+
+        static async createWithAsyncSchema(
+            data: StandardSchemaV1.InferInput<Schema>
+        ) {
+            const parsedData = await parseAsync(ValueObject.schema, data);
+            return new this(parsedData);
         }
 
         get model() {
@@ -19,24 +47,10 @@ export const defineValueObjectClass = <Schema extends StandardSchemaV1>(
                 [modelSymbol]: StandardSchemaV1.InferOutput<Schema>;
             };
 
-            if (!('structuredClone' in globalThis)) {
-                throw new StructuredCloneNotFoundError({});
-            }
-
-            return structuredClone(thisWithSymbol[modelSymbol]);
+            return thisWithSymbol[modelSymbol] as DeepReadonly<
+                StandardSchemaV1.InferOutput<Schema>
+            >;
         }
-
-        static create = (data: StandardSchemaV1.InferInput<Schema>) => {
-            const parsedData = parseSync(schema, data);
-            return new ValueObject(parsedData);
-        };
-
-        static createWithAsyncSchema = async (
-            data: StandardSchemaV1.InferInput<Schema>
-        ) => {
-            const parsedData = await parseAsync(schema, data);
-            return new ValueObject(parsedData);
-        };
     }
 
     return ValueObject;
