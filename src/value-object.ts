@@ -1,5 +1,5 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
-import { type DeepReadonly, parseAsync, parseSync } from './utils';
+import { type DeepReadonly, parseSync } from './utils';
 
 export abstract class S<Schema extends StandardSchemaV1> {
     abstract schema: Schema;
@@ -33,13 +33,6 @@ export const defineValueObjectClass = <Schema extends StandardSchemaV1>(
         static is = (target: unknown): boolean => {
             return isThisClass(target);
         };
-
-        static async createWithAsyncSchema(
-            data: StandardSchemaV1.InferInput<Schema>
-        ) {
-            const parsedData = await parseAsync(ValueObject.schema, data);
-            return new this(parsedData);
-        }
 
         get model() {
             const thisWithSymbol = this as unknown as {
