@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/alevnyacow/domain-first-types/compare/v1.0.4...v1.0.5) (2026-07-23)
+
+
+### Bug Fixes
+
+* added Entity export ([cac105c](https://github.com/alevnyacow/domain-first-types/commit/cac105cf3e0fa3de3c02c0de99faf75cdc3a3a84))
+
 ## [1.0.4](https://github.com/alevnyacow/domain-first-types/compare/v1.0.3...v1.0.4) (2026-07-23)
 
 
