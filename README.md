@@ -42,11 +42,7 @@ class UserId extends defineValueObject(
 
 class User extends defineEntity(
     // id schema
-    z.custom<UserId>(
-        // every Entity and Value Object has a static `is` method
-        // for type-safe instance checks
-        UserId.is,
-    ),
+    z.instanceof(UserId),
     // model schema
     z.object({ name: z.string().nonempty() }),
 ) {}
