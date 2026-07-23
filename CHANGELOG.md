@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/alevnyacow/domain-first-types/compare/v1.0.2...v1.0.3) (2026-07-23)
+
+
+### Bug Fixes
+
+* badges in `for-the-badge` style ([3d2969b](https://github.com/alevnyacow/domain-first-types/commit/3d2969b30089f495a7ff29025a0e3975649694dd))
+
 ## [1.0.2](https://github.com/alevnyacow/domain-first-types/compare/v1.0.1...v1.0.2) (2026-07-23)
 
 
