@@ -10,7 +10,7 @@
         "domain model",
         "domain-first"
     ],
-    "version": "0.0.2",
+    "version": "1.0.0",
     "type": "module",
     "repository": {
         "type": "git",
