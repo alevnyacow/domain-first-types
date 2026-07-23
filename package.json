@@ -8,7 +8,9 @@
         "value object",
         "vo",
         "domain model",
-        "domain-first"
+        "domain-first",
+        "ddd",
+        "domain-driven"
     ],
     "version": "1.0.3",
     "type": "module",
