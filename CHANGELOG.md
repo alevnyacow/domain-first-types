@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/alevnyacow/domain-first-types/compare/v1.0.3...v1.0.4) (2026-07-23)
+
+
+### Bug Fixes
+
+* added `ddd` and `domain-driven` keywords ([88f303d](https://github.com/alevnyacow/domain-first-types/commit/88f303df7658c20bc6a6dfbc4c82dafd59d1f657))
+
 ## [1.0.3](https://github.com/alevnyacow/domain-first-types/compare/v1.0.2...v1.0.3) (2026-07-23)
 
 
