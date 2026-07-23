@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/alevnyacow/domain-first-types/compare/v1.0.0...v1.0.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* darker logo, removed unused error ([da7c221](https://github.com/alevnyacow/domain-first-types/commit/da7c2219bf1f09669fcea891689aab3f1401da68))
+
 # 1.0.0 (2026-07-23)
 
 
