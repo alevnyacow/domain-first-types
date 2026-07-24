@@ -31,7 +31,7 @@ test('d', () => {
     });
 
     const a = null as any;
-    if (Pagination.is(a)) {
+    if (a instanceof Pagination) {
         a.nextPage.model;
     }
 

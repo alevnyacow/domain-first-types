@@ -13,7 +13,7 @@ export const defineValueObject = <Schema extends StandardSchemaV1>(
         return !!target && typeof target === 'object' && classSymbol in target;
     };
 
-    class ValueObject {
+    abstract class ValueObject {
         public static readonly schema =
             typeof schema === 'function' ? schema(isThisClass) : schema;
 
@@ -24,13 +24,6 @@ export const defineValueObject = <Schema extends StandardSchemaV1>(
                 value: parsedData
             });
             Object.defineProperty(this, classSymbol, { value: true });
-        }
-
-        static is<T extends abstract new (...args: any[]) => any>(
-            this: T,
-            target: unknown
-        ): target is InstanceType<T> {
-            return isThisClass(target);
         }
 
         get model() {

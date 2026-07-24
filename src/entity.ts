@@ -18,7 +18,7 @@ export const defineEntity = <
         return !!target && typeof target === 'object' && classSymbol in target;
     };
 
-    class Entity {
+    abstract class Entity {
         public static readonly idSchema = idSchema;
         public static readonly modelSchema =
             typeof modelSchema === 'function'
@@ -43,13 +43,6 @@ export const defineEntity = <
             });
         }
 
-        static is<T extends abstract new (...args: any[]) => any>(
-            this: T,
-            target: unknown
-        ): target is InstanceType<T> {
-            return isThisClass(target);
-        }
-
         get model() {
             const thisWithSymbol = this as unknown as {
                 [modelSymbol]: StandardSchemaV1.InferOutput<ModelSchema>;
@@ -59,6 +52,7 @@ export const defineEntity = <
                 StandardSchemaV1.InferOutput<ModelSchema>
             >;
         }
+
         get id() {
             const thisWithSymbol = this as unknown as {
                 [idSymbol]: StandardSchemaV1.InferOutput<IdSchema>;
