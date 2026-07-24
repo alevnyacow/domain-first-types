@@ -26,8 +26,8 @@ export const defineEntity = <
                 : modelSchema;
 
         constructor(
-            id: StandardSchemaV1.InferOutput<IdSchema>,
-            model: StandardSchemaV1.InferOutput<ModelSchema>
+            id: StandardSchemaV1.InferInput<IdSchema>,
+            model: StandardSchemaV1.InferInput<ModelSchema>
         ) {
             const parsedId = parseSync(Entity.idSchema, id);
             const parsedModelData = parseSync(Entity.modelSchema, model);

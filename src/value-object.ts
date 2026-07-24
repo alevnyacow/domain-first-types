@@ -17,7 +17,7 @@ export const defineValueObject = <Schema extends StandardSchemaV1>(
         public static readonly schema =
             typeof schema === 'function' ? schema(isThisClass) : schema;
 
-        constructor(data: StandardSchemaV1.InferOutput<Schema>) {
+        constructor(data: StandardSchemaV1.InferInput<Schema>) {
             const parsedData = parseSync(ValueObject.schema, data);
 
             Object.defineProperty(this, modelSymbol, {
