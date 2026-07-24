@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/alevnyacow/domain-first-types/compare/v2.0.0...v2.0.1) (2026-07-24)
+
+
+### Bug Fixes
+
+* `InferInput` instead of `InferOutput` in constructors ([1cb2900](https://github.com/alevnyacow/domain-first-types/commit/1cb29003ada35e20747444b1bb82cc684237afa5))
+
 # [2.0.0](https://github.com/alevnyacow/domain-first-types/compare/v1.0.6...v2.0.0) (2026-07-24)
 
 
