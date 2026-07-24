@@ -1,3 +1,16 @@
+# [2.0.0](https://github.com/alevnyacow/domain-first-types/compare/v1.0.6...v2.0.0) (2026-07-24)
+
+
+### Features
+
+* abstract Entities and Value Objects, removed static `is` checker ([40d0a26](https://github.com/alevnyacow/domain-first-types/commit/40d0a26ec6a24c9569201717f3d8ffcc2f954525))
+
+
+### BREAKING CHANGES
+
+* const Entity = defineEntity(...) is not available anymore,
+static `is` is not available anymore
+
 ## [1.0.6](https://github.com/alevnyacow/domain-first-types/compare/v1.0.5...v1.0.6) (2026-07-23)
 
 
