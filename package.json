@@ -1,6 +1,6 @@
 {
     "name": "@domain-first/types",
-    "description": "Type-safe Entities and Value Objects powered by Standard Schema",
+    "description": "Type-Safe Entities and Value Objects with Standard Schema Validation",
     "license": "MIT",
     "keywords": [
         "entity",
@@ -10,7 +10,10 @@
         "domain model",
         "domain-first",
         "ddd",
-        "domain-driven"
+        "domain-driven",
+        "standard schema",
+        "zod",
+        "valibot"
     ],
     "version": "2.0.1",
     "type": "module",

@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    Type-safe Entities and Value Objects powered by Standard Schema.
+    Type-Safe Entities and Value Objects with Standard Schema Validation.
 </p>
 
 <p align="center">
