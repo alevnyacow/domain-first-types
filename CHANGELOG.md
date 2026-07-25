@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/alevnyacow/domain-first-types/compare/v3.0.0...v3.0.1) (2026-07-25)
+
+
+### Bug Fixes
+
+* minifying dist files ([bc676c9](https://github.com/alevnyacow/domain-first-types/commit/bc676c94e65d8118686a8a7cae87e80238a592b4))
+
 # [3.0.0](https://github.com/alevnyacow/domain-first-types/compare/v2.0.2...v3.0.0) (2026-07-25)
 
 
