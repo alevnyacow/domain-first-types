@@ -1,14 +1,14 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { type DeepReadonly, parseSync } from './utils';
 
-export const defineEntity = <
+const createEntity = <
     IdSchema extends StandardSchemaV1,
     ModelSchema extends StandardSchemaV1
 >(
     idSchema: IdSchema,
-    modelSchema:
-        | ModelSchema
-        | ((isCurrentEntity: (target: unknown) => boolean) => ModelSchema)
+    getModelSchema: (
+        isCurrentEntity: (target: unknown) => boolean
+    ) => ModelSchema
 ) => {
     const idSymbol = Symbol();
     const modelSymbol = Symbol();
@@ -20,10 +20,7 @@ export const defineEntity = <
 
     abstract class Entity {
         public static readonly idSchema = idSchema;
-        public static readonly modelSchema =
-            typeof modelSchema === 'function'
-                ? modelSchema(isThisClass)
-                : modelSchema;
+        public static readonly modelSchema = getModelSchema(isThisClass);
 
         constructor(
             id: StandardSchemaV1.InferInput<IdSchema>,
@@ -35,36 +32,50 @@ export const defineEntity = <
             Object.defineProperty(this, idSymbol, {
                 value: parsedId
             });
+
             Object.defineProperty(this, modelSymbol, {
                 value: parsedModelData
             });
+
             Object.defineProperty(this, classSymbol, {
                 value: true
             });
         }
 
         get model() {
-            const thisWithSymbol = this as unknown as {
-                [modelSymbol]: StandardSchemaV1.InferOutput<ModelSchema>;
-            };
-
-            return thisWithSymbol[modelSymbol] as DeepReadonly<
+            return (this as any)[modelSymbol] as DeepReadonly<
                 StandardSchemaV1.InferOutput<ModelSchema>
             >;
         }
 
         get id() {
-            const thisWithSymbol = this as unknown as {
-                [idSymbol]: StandardSchemaV1.InferOutput<IdSchema>;
-            };
-
-            return thisWithSymbol[idSymbol] as DeepReadonly<
+            return (this as any)[idSymbol] as DeepReadonly<
                 StandardSchemaV1.InferOutput<IdSchema>
             >;
         }
     }
 
     return Entity;
+};
+
+export const defineEntity = <
+    IdSchema extends StandardSchemaV1,
+    ModelSchema extends StandardSchemaV1
+>(
+    idSchema: IdSchema,
+    modelSchema: ModelSchema
+) => {
+    return createEntity(idSchema, () => modelSchema);
+};
+
+export const defineRecursiveEntity = <
+    IdSchema extends StandardSchemaV1,
+    ModelSchema extends StandardSchemaV1
+>(
+    idSchema: IdSchema,
+    modelSchema: (isCurrentEntity: (target: unknown) => boolean) => ModelSchema
+) => {
+    return createEntity(idSchema, modelSchema);
 };
 
 export type InferEntityModel<T> = T extends { modelSchema: StandardSchemaV1 }

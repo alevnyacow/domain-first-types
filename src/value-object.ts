@@ -1,10 +1,8 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import { type DeepReadonly, parseSync } from './utils';
 
-export const defineValueObject = <Schema extends StandardSchemaV1>(
-    schema:
-        | Schema
-        | ((isCurrentValueObject: (target: unknown) => boolean) => Schema)
+const createValueObject = <Schema extends StandardSchemaV1>(
+    getSchema: (isCurrentValueObject: (target: unknown) => boolean) => Schema
 ) => {
     const modelSymbol = Symbol();
     const classSymbol = Symbol();
@@ -14,8 +12,7 @@ export const defineValueObject = <Schema extends StandardSchemaV1>(
     };
 
     abstract class ValueObject {
-        public static readonly schema =
-            typeof schema === 'function' ? schema(isThisClass) : schema;
+        public static readonly schema = getSchema(isThisClass);
 
         constructor(data: StandardSchemaV1.InferInput<Schema>) {
             const parsedData = parseSync(ValueObject.schema, data);
@@ -23,7 +20,10 @@ export const defineValueObject = <Schema extends StandardSchemaV1>(
             Object.defineProperty(this, modelSymbol, {
                 value: parsedData
             });
-            Object.defineProperty(this, classSymbol, { value: true });
+
+            Object.defineProperty(this, classSymbol, {
+                value: true
+            });
         }
 
         get model() {
@@ -40,8 +40,22 @@ export const defineValueObject = <Schema extends StandardSchemaV1>(
     return ValueObject;
 };
 
-export type InferValueObjectSchema<T> = T extends { schema: StandardSchemaV1 }
-    ? StandardSchemaV1.InferOutput<T['schema']>
+export const defineValueObject = <Schema extends StandardSchemaV1>(
+    schema: Schema
+) => {
+    return createValueObject(() => schema);
+};
+
+export const defineRecursiveValueObject = <Schema extends StandardSchemaV1>(
+    schema: (isCurrentValueObject: (target: unknown) => boolean) => Schema
+) => {
+    return createValueObject(schema);
+};
+
+export type InferValueObjectSchema<T> = T extends {
+    schema: infer S extends StandardSchemaV1;
+}
+    ? StandardSchemaV1.InferOutput<S>
     : T extends { model: infer M }
       ? M
       : never;
