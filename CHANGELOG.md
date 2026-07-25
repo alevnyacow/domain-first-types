@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/alevnyacow/domain-first-types/compare/v2.0.2...v3.0.0) (2026-07-25)
+
+
+### Features
+
+* split defineEntity, defineRecursiveEntity, defineValueObject, ([f1fd284](https://github.com/alevnyacow/domain-first-types/commit/f1fd284b80e59ea9e4f47fc6649ebf94bb2dc522))
+
+
+### BREAKING CHANGES
+
+* `defineEntity(check => Schema` is not available anymore, use
+`defineRecursiveEntity`, same with `defineValueObject` - use
+`defineRecursiveValueObject`
+
 ## [2.0.2](https://github.com/alevnyacow/domain-first-types/compare/v2.0.1...v2.0.2) (2026-07-24)
 
 
