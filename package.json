@@ -15,6 +15,7 @@
         "zod",
         "valibot"
     ],
+    "homepage": "https://codesandbox.io/p/devbox/practical-smoke-d8crnx",
     "version": "3.0.3",
     "type": "module",
     "repository": {
