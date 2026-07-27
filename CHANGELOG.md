@@ -1,3 +1,10 @@
+## [3.0.4](https://github.com/alevnyacow/domain-first-types/compare/v3.0.3...v3.0.4) (2026-07-27)
+
+
+### Bug Fixes
+
+* added codesandbox demo as homepage ([8e47ddc](https://github.com/alevnyacow/domain-first-types/commit/8e47ddcd02c4dc77f2708d5a90c331ee5337e134))
+
 ## [3.0.3](https://github.com/alevnyacow/domain-first-types/compare/v3.0.2...v3.0.3) (2026-07-27)
 
 
