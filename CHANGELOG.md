@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/alevnyacow/domain-first-types/compare/v3.0.2...v3.0.3) (2026-07-27)
+
+
+### Bug Fixes
+
+* value object tests with `zod`, `valibot`, `joi` ([ce4e00c](https://github.com/alevnyacow/domain-first-types/commit/ce4e00c3fc1932e171d6fd407377bee907bfdd23))
+
 ## [3.0.2](https://github.com/alevnyacow/domain-first-types/compare/v3.0.1...v3.0.2) (2026-07-25)
 
 
