@@ -1,3 +1,10 @@
+## [3.0.5](https://github.com/alevnyacow/domain-first-types/compare/v3.0.4...v3.0.5) (2026-07-27)
+
+
+### Bug Fixes
+
+* added entry file for codesandbox ([9c71d73](https://github.com/alevnyacow/domain-first-types/commit/9c71d73589ee03d310f31ddf70b74b3de626a99d))
+
 ## [3.0.4](https://github.com/alevnyacow/domain-first-types/compare/v3.0.3...v3.0.4) (2026-07-27)
 
 
