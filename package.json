@@ -15,7 +15,7 @@
         "zod",
         "valibot"
     ],
-    "homepage": "https://codesandbox.io/p/devbox/practical-smoke-d8crnx?file=%2Findex.js%3A1%2C4",
+    "homepage": "https://codesandbox.io/p/devbox/async-cache-d8crnx?file=%2Findex.js%3A8%2C65",
     "version": "3.0.5",
     "type": "module",
     "repository": {
