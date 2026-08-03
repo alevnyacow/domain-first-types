@@ -1,3 +1,10 @@
+## [3.0.7](https://github.com/alevnyacow/domain-first-types/compare/v3.0.6...v3.0.7) (2026-08-03)
+
+
+### Bug Fixes
+
+* upgraded `@domain-first/errors` ([8f378a7](https://github.com/alevnyacow/domain-first-types/commit/8f378a763b03baa2f6b9dae486cc1cd4d8e53776))
+
 ## [3.0.6](https://github.com/alevnyacow/domain-first-types/compare/v3.0.5...v3.0.6) (2026-07-28)
 
 
