@@ -1,9 +1,9 @@
-import { defineErrorClass } from '@domain-first/errors';
+import { errorNamespace } from '@domain-first/errors';
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 
-export const InvalidDataParsingError = defineErrorClass<{
+const ParsingErrors = errorNamespace("PARSING")
+
+export const InvalidDataParsingError = ParsingErrors.error<{
     parsingIssues: readonly StandardSchemaV1.Issue[];
     value: unknown;
-}>({
-    code: 'INVALID_DATA_PARSING'
-});
+}>('INVALID_DATA');
