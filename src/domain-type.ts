@@ -1,5 +1,5 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
-import { parseSync } from './utils';
+import { type DeepReadonly, parseSync } from './utils';
 
 const createDomainType = <ModelSchema extends StandardSchemaV1>(
     getModelSchema: (
@@ -48,7 +48,7 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
 
     return DomainType as unknown as (abstract new (
         model: StandardSchemaV1.InferInput<ModelSchema>
-    ) => Readonly<
+    ) => DeepReadonly<
         StandardSchemaV1.InferOutput<ModelSchema> extends object
             ? StandardSchemaV1.InferOutput<ModelSchema>
             : {
