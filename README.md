@@ -102,7 +102,7 @@ console.log(nodeWithLink.linkedNode?.id); // 1
 ## Error handling
 
 ```ts
-import { domainType, InvalidDataParsingError } from "@domain-first/types";
+import { domainType, TypeParsingError } from "@domain-first/types";
 import z from "zod";
 
 class NonEmptyString extends domainType(z.string().nonempty()) {}
@@ -110,7 +110,7 @@ class NonEmptyString extends domainType(z.string().nonempty()) {}
 try {
     const _string = new NonEmptyString("");
 } catch (e: unknown) {
-    if (e instanceof InvalidDataParsingError) {
+    if (e instanceof InvalidDataError) {
         console.error(e.details.parsingIssues);
         console.error(e.details.value);
     }

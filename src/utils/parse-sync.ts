@@ -1,7 +1,7 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 import {
     AsyncSchemaInSyncParsingError,
-    InvalidDataParsingError
+    TypeParsingError
 } from '../errors';
 
 export function parseSync<S extends StandardSchemaV1>(
@@ -15,7 +15,7 @@ export function parseSync<S extends StandardSchemaV1>(
     }
 
     if ('issues' in result && result.issues) {
-        throw new InvalidDataParsingError({ parsingIssues: result.issues, value });
+        throw new TypeParsingError({ parsingIssues: result.issues, value });
     }
 
     return result.value;

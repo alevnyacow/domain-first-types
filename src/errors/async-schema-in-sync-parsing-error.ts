@@ -1,5 +1,3 @@
-import { errorNamespace } from '@domain-first/errors';
+import { DomainFirstTypesError } from './namespace';
 
-const SchemaErrors = errorNamespace('SCHEMA')
-
-export const AsyncSchemaInSyncParsingError = SchemaErrors.error('ASYNC_LOGIC');
+export const AsyncSchemaInSyncParsingError = DomainFirstTypesError.error('ASYNC_LOGIC');

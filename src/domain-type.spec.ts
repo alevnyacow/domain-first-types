@@ -3,7 +3,7 @@ import Joi from 'joi';
 import * as v from 'valibot';
 import z from 'zod';
 import { domainType, recursiveDomainType } from './domain-type';
-import { InvalidDataParsingError } from './errors';
+import { TypeParsingError } from './errors';
 
 test('zod', () => {
     class ZodNonEmptyString extends domainType(z.string().nonempty()) {}
@@ -12,7 +12,7 @@ test('zod', () => {
     expect(nonEmptyString.value).toBe('non-empty');
 
     expect(() => new ZodNonEmptyString('')).toThrowError(
-        InvalidDataParsingError
+        TypeParsingError
     );
 
     class ZodUserData extends domainType(
@@ -42,7 +42,7 @@ test('zod', () => {
                 lastName: new ZodNonEmptyString('Doe'),
                 age: -30
             })
-    ).toThrowError(InvalidDataParsingError);
+    ).toThrowError(TypeParsingError);
 });
 
 test('valibot', () => {
@@ -54,7 +54,7 @@ test('valibot', () => {
     expect(nonEmptyString.value).toBe('non-empty');
 
     expect(() => new ValibotNonEmptyString('')).toThrowError(
-        InvalidDataParsingError
+        TypeParsingError
     );
 
     class ValibotUserData extends domainType(
@@ -84,7 +84,7 @@ test('valibot', () => {
                 lastName: new ValibotNonEmptyString('Doe'),
                 age: -30
             })
-    ).toThrowError(InvalidDataParsingError);
+    ).toThrowError(TypeParsingError);
 });
 
 test('joi', () => {
@@ -96,7 +96,7 @@ test('joi', () => {
     expect(nonEmptyString.value).toBe('non-empty');
 
     expect(() => new JoiNonEmptyString('')).toThrowError(
-        InvalidDataParsingError
+        TypeParsingError
     );
 
     class JoiUserData extends domainType(
@@ -126,7 +126,7 @@ test('joi', () => {
                 lastName: new JoiNonEmptyString('Doe'),
                 age: -30
             })
-    ).toThrowError(InvalidDataParsingError);
+    ).toThrowError(TypeParsingError);
 });
 
 test('README example', () => {
@@ -166,7 +166,7 @@ test('README example', () => {
     try {
         const _invalidUserId = new UserId('');
     } catch (e: unknown) {
-        if (e instanceof InvalidDataParsingError) {
+        if (e instanceof TypeParsingError) {
             console.error(e.details.parsingIssues);
             console.error(e.details.value);
         }
