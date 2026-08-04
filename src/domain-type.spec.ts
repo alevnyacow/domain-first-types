@@ -2,21 +2,20 @@ import { expect, test } from '@rstest/core';
 import Joi from 'joi';
 import * as v from 'valibot';
 import z from 'zod';
-
+import { domainType, recursiveDomainType } from './domain-type';
 import { InvalidDataParsingError } from './errors';
-import { defineValueObject } from './value-object';
 
 test('zod', () => {
-    class ZodNonEmptyString extends defineValueObject(z.string().nonempty()) {}
+    class ZodNonEmptyString extends domainType(z.string().nonempty()) {}
 
     const nonEmptyString = new ZodNonEmptyString('non-empty');
-    expect(nonEmptyString.model).toBe('non-empty');
+    expect(nonEmptyString.value).toBe('non-empty');
 
     expect(() => new ZodNonEmptyString('')).toThrowError(
         InvalidDataParsingError
     );
 
-    class ZodUserData extends defineValueObject(
+    class ZodUserData extends domainType(
         z.object({
             firstName: z.instanceof(ZodNonEmptyString),
             lastName: z.instanceof(ZodNonEmptyString),
@@ -30,7 +29,7 @@ test('zod', () => {
         age: 30
     });
 
-    expect(userData.model).toEqual({
+    expect(userData).toEqual({
         firstName: expect.any(ZodNonEmptyString),
         lastName: expect.any(ZodNonEmptyString),
         age: 30
@@ -47,18 +46,18 @@ test('zod', () => {
 });
 
 test('valibot', () => {
-    class ValibotNonEmptyString extends defineValueObject(
+    class ValibotNonEmptyString extends domainType(
         v.pipe(v.string(), v.nonEmpty())
     ) {}
 
     const nonEmptyString = new ValibotNonEmptyString('non-empty');
-    expect(nonEmptyString.model).toBe('non-empty');
+    expect(nonEmptyString.value).toBe('non-empty');
 
     expect(() => new ValibotNonEmptyString('')).toThrowError(
         InvalidDataParsingError
     );
 
-    class ValibotUserData extends defineValueObject(
+    class ValibotUserData extends domainType(
         v.object({
             firstName: v.instance(ValibotNonEmptyString),
             lastName: v.instance(ValibotNonEmptyString),
@@ -72,7 +71,7 @@ test('valibot', () => {
         age: 30
     });
 
-    expect(userData.model).toEqual({
+    expect(userData).toEqual({
         firstName: expect.any(ValibotNonEmptyString),
         lastName: expect.any(ValibotNonEmptyString),
         age: 30
@@ -89,18 +88,18 @@ test('valibot', () => {
 });
 
 test('joi', () => {
-    class JoiNonEmptyString extends defineValueObject(
+    class JoiNonEmptyString extends domainType(
         Joi.string().min(1).required()
     ) {}
 
     const nonEmptyString = new JoiNonEmptyString('non-empty');
-    expect(nonEmptyString.model).toBe('non-empty');
+    expect(nonEmptyString.value).toBe('non-empty');
 
     expect(() => new JoiNonEmptyString('')).toThrowError(
         InvalidDataParsingError
     );
 
-    class JoiUserData extends defineValueObject(
+    class JoiUserData extends domainType(
         Joi.object({
             firstName: Joi.object().instance(JoiNonEmptyString).required(),
             lastName: Joi.object().instance(JoiNonEmptyString).required(),
@@ -114,7 +113,7 @@ test('joi', () => {
         age: 30
     });
 
-    expect(userData.model).toEqual({
+    expect(userData).toEqual({
         firstName: expect.any(JoiNonEmptyString),
         lastName: expect.any(JoiNonEmptyString),
         age: 30
@@ -128,4 +127,64 @@ test('joi', () => {
                 age: -30
             })
     ).toThrowError(InvalidDataParsingError);
+});
+
+test('README example', () => {
+    class UserId extends domainType(z.string().nonempty()) {
+        static get randomId() {
+            return new UserId(Math.random().toString());
+        }
+    }
+
+    class User extends domainType(
+        z.object({
+            id: z.instanceof(UserId),
+            name: z.string().nonempty()
+        })
+    ) {
+        withNewName = (name: string) => {
+            return new User({
+                id: this.id,
+                name
+            });
+        };
+    }
+
+    const user = new User({
+        id: UserId.randomId,
+        name: 'First User'
+    });
+
+    console.log(user.name); // 'First User'
+    /**
+     * Non-object domain types are exposed through the `value` property.
+     */
+    console.log(user.id.value); // 'user-1'
+
+    console.log(user.withNewName('Test Name').name); // 'Test Name'
+
+    try {
+        const _invalidUserId = new UserId('');
+    } catch (e: unknown) {
+        if (e instanceof InvalidDataParsingError) {
+            console.error(e.details.parsingIssues);
+            console.error(e.details.value);
+        }
+    }
+
+    expect(true).toBe(true);
+});
+
+test('recursive', () => {
+    class Node extends recursiveDomainType((isNode) => {
+        return z.object({
+            id: z.string().nonempty(),
+            linkedNode: z.custom<Node>(isNode).optional()
+        });
+    }) {}
+
+    const node = new Node({ id: '1' });
+    const nodeWithLink = new Node({ id: '2', linkedNode: node });
+    console.log(nodeWithLink);
+    expect(true).toBe(true);
 });

@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    Type-Safe Entities and Value Objects with Standard Schema Validation.
+    Type-safe domain models powered by Standard Schema validation.
 </p>
 
 <p align="center">
@@ -22,41 +22,95 @@ npm i @domain-first/types
 
 # Motivation
 
-Building Entities and Value Objects often involves repetitive boilerplate, such as validation, while each class still needs its own domain-specific behavior. Domain-First Types implements the shared parts while leaving domain-specific behavior to your classes.
+Domain models often need both runtime validation and domain-specific behavior. Keeping validation, type inference, and business logic together can lead to repetitive boilerplate.
 
-# Quick Start
+Domain-First Types creates type-safe domain models from Standard Schema validators while leaving domain-specific behavior to your classes.
+
+# Features
+
+- Runtime validation through any Standard Schema compatible library
+- Full TypeScript inference
+- Domain behavior through class methods
+- Recursive domain types
+
+# Examples
+
+## Quick Start
 
 ```ts
-import {
-    defineValueObject,
-    defineEntity,
-    InvalidDataParsingError,
-} from "@domain-first/types";
+import { domainType } from "@domain-first/types";
 // any schema library supporting Standard Schema can be used
 import { z } from "zod";
 
-class UserId extends defineValueObject(
-    // model schema
-    z.string().nonempty(),
-) {}
+class UserId extends domainType(z.string().nonempty()) {
+    static get randomId() {
+        return new UserId(globalThis.crypto.randomUUID());
+    }
+}
 
-class User extends defineEntity(
-    // id schema
-    z.instanceof(UserId),
-    // model schema
-    z.object({ name: z.string().nonempty() }),
-) {}
+class User extends domainType(
+    z.object({
+        id: z.instanceof(UserId),
+        name: z.string().nonempty(),
+    }),
+) {
+    withNewName = (name: string) => {
+        return new User({
+            id: this.id,
+            name,
+        });
+    };
+}
 
-const user = new User(new UserId("user-1"), { name: "First User" });
+const user = new User({
+    id: UserId.randomId,
+    name: "First User",
+});
 
-console.log(user.id.model); // "user-1", deep readonly
-console.log(user.model); // { name: "First User" }, deep readonly
+console.log(user.name); // 'First User'
+// user.name = 'New Name' -> TS Error
+
+/**
+ * Domain types created from primitive schemas
+ * expose their value through the `value` property.
+ */
+console.log(user.id.value); // 'user-1'
+// user.id.value = 'new value' -> TS Error
+
+console.log(user.withNewName("Test Name").name); // 'Test Name'
+```
+
+## Recursive types
+
+```ts
+import z from "zod";
+import { recursiveDomainType } from "@domain-first/types";
+
+class Node extends recursiveDomainType((isNode) => {
+    return z.object({
+        id: z.string().nonempty(),
+        linkedNode: z.custom<Node>(isNode).optional(),
+    });
+}) {}
+
+const node = new Node({ id: "1" });
+const nodeWithLink = new Node({ id: "2", linkedNode: node });
+
+console.log(nodeWithLink.linkedNode?.id); // 1
+```
+
+## Error handling
+
+```ts
+import { domainType, InvalidDataParsingError } from "@domain-first/types";
+import z from "zod";
+
+class NonEmptyString extends domainType(z.string().nonempty()) {}
 
 try {
-    const invalidUserId = new UserId("");
+    const _string = new NonEmptyString("");
 } catch (e: unknown) {
-    // use static `is` method for error checks
-    if (InvalidDataParsingError.is(e)) {
+    if (e instanceof InvalidDataParsingError) {
         console.error(e.details.parsingIssues);
         console.error(e.details.value);
     }
