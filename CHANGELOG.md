@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/alevnyacow/domain-first-types/compare/v4.0.0...v5.0.0) (2026-08-04)
+
+
+### Features
+
+* errors refactoring, shared namespace ([4723447](https://github.com/alevnyacow/domain-first-types/commit/47234476ba51ec82e81df73566be92c805876b26))
+
+
+### BREAKING CHANGES
+
+* `InvalidDataParsingError` -> `TypeParsingError`
+
 # [4.0.0](https://github.com/alevnyacow/domain-first-types/compare/v3.0.7...v4.0.0) (2026-08-04)
 
 
