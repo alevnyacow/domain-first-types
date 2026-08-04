@@ -110,7 +110,7 @@ class NonEmptyString extends domainType(z.string().nonempty()) {}
 try {
     const _string = new NonEmptyString("");
 } catch (e: unknown) {
-    if (e instanceof InvalidDataError) {
+    if (e instanceof TypeParsingError) {
         console.error(e.details.parsingIssues);
         console.error(e.details.value);
     }
