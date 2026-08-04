@@ -1,3 +1,16 @@
+# [4.0.0](https://github.com/alevnyacow/domain-first-types/compare/v3.0.7...v4.0.0) (2026-08-04)
+
+
+### Features
+
+* new universal contract, removed `model` concept, removed ([025fdf6](https://github.com/alevnyacow/domain-first-types/commit/025fdf652683813303e8222fd362ee58bdf5001a))
+
+
+### BREAKING CHANGES
+
+* new API, use `domainType` and `recursiveDomainType` from this
+version
+
 ## [3.0.7](https://github.com/alevnyacow/domain-first-types/compare/v3.0.6...v3.0.7) (2026-08-03)
 
 
