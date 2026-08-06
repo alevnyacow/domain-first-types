@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/alevnyacow/domain-first-types/compare/v5.0.1...v5.0.2) (2026-08-06)
+
+
+### Bug Fixes
+
+* updated badges ([8b5ce82](https://github.com/alevnyacow/domain-first-types/commit/8b5ce82c75df6a71a30f7055d7ec4a897242c039))
+
 ## [5.0.1](https://github.com/alevnyacow/domain-first-types/compare/v5.0.0...v5.0.1) (2026-08-04)
 
 
