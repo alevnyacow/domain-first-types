@@ -116,3 +116,14 @@ try {
     }
 }
 ```
+
+# Test coverage
+
+Will be improved in upcoming versions.
+
+| Type       | Threshold | Current value |
+| ---------- | --------- | ------------- |
+| Statements | 95 %      | 96.87 %       |
+| Branches   | 90 %      | 92.3 %        |
+| Functions  | 100 %     | 100 %         |
+| Lines      | 95 %      | 96.15 %       |
