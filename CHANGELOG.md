@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/alevnyacow/domain-first-types/compare/v5.0.2...v5.0.3) (2026-08-09)
+
+
+### Bug Fixes
+
+* added coverage (including README) ([bfa7c9d](https://github.com/alevnyacow/domain-first-types/commit/bfa7c9d73eb46e22796411927f4d9da11b84adde))
+
 ## [5.0.2](https://github.com/alevnyacow/domain-first-types/compare/v5.0.1...v5.0.2) (2026-08-06)
 
 
