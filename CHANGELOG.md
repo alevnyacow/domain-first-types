@@ -1,3 +1,10 @@
+## [5.0.6](https://github.com/alevnyacow/domain-first-types/compare/v5.0.5...v5.0.6) (2026-08-10)
+
+
+### Bug Fixes
+
+* removed `Test coverage` section (badge has all the info) ([4fb465b](https://github.com/alevnyacow/domain-first-types/commit/4fb465b2acd6c526f38a2e7ccbbc9e9995d008f5))
+
 ## [5.0.5](https://github.com/alevnyacow/domain-first-types/compare/v5.0.4...v5.0.5) (2026-08-10)
 
 
