@@ -1,3 +1,10 @@
+## [5.0.5](https://github.com/alevnyacow/domain-first-types/compare/v5.0.4...v5.0.5) (2026-08-10)
+
+
+### Bug Fixes
+
+* removed `exclude` from tests (barrel files don't affect coverage) ([f69ecd7](https://github.com/alevnyacow/domain-first-types/commit/f69ecd7d7622cdaedfba82c371336a5c83d61b76))
+
 ## [5.0.4](https://github.com/alevnyacow/domain-first-types/compare/v5.0.3...v5.0.4) (2026-08-10)
 
 
