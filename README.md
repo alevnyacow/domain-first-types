@@ -10,6 +10,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/npm/v/%40domain-first%2Ftypes" alt="version">
+  <img src='https://img.shields.io/badge/test%20coverage-100%25-brightgreen'>
   <img src="https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white?style=for-the-badge" alt="size">
   <img src="https://img.shields.io/npm/l/%40domain-first%2Ftypes" alt="license">
 </p>
@@ -119,11 +120,11 @@ try {
 
 # Test coverage
 
-Will be improved in upcoming versions.
+Full ✅
 
 | Type       | Threshold | Current value |
 | ---------- | --------- | ------------- |
-| Statements | 95 %      | 96.87 %       |
-| Branches   | 90 %      | 92.3 %        |
+| Statements | 100 %     | 100 %         |
+| Branches   | 100 %     | 100 %         |
 | Functions  | 100 %     | 100 %         |
-| Lines      | 95 %      | 96.15 %       |
+| Lines      | 100 %     | 100 %         |
