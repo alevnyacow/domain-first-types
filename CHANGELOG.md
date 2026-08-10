@@ -1,3 +1,10 @@
+## [5.0.4](https://github.com/alevnyacow/domain-first-types/compare/v5.0.3...v5.0.4) (2026-08-10)
+
+
+### Bug Fixes
+
+* 100% test coverage ([a849357](https://github.com/alevnyacow/domain-first-types/commit/a8493579a8d8a7aa8971c636ab6bd52e0f8fb7ff))
+
 ## [5.0.3](https://github.com/alevnyacow/domain-first-types/compare/v5.0.2...v5.0.3) (2026-08-09)
 
 
