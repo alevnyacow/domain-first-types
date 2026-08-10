@@ -1,3 +1,10 @@
+## [5.0.7](https://github.com/alevnyacow/domain-first-types/compare/v5.0.6...v5.0.7) (2026-08-10)
+
+
+### Bug Fixes
+
+* minor test refactoring ([3543fce](https://github.com/alevnyacow/domain-first-types/commit/3543fcee3c6c52b3811e7877e20cbcbaba695d40))
+
 ## [5.0.6](https://github.com/alevnyacow/domain-first-types/compare/v5.0.5...v5.0.6) (2026-08-10)
 
 
