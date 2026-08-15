@@ -1,3 +1,10 @@
+## [5.0.8](https://github.com/alevnyacow/domain-first-types/compare/v5.0.7...v5.0.8) (2026-08-15)
+
+
+### Bug Fixes
+
+* **README:** added semantic release badge ([8c8711c](https://github.com/alevnyacow/domain-first-types/commit/8c8711cdb4bcc40a7df8a09b4dba69f86fd4cb42))
+
 ## [5.0.7](https://github.com/alevnyacow/domain-first-types/compare/v5.0.6...v5.0.7) (2026-08-10)
 
 
