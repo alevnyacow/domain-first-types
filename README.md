@@ -12,6 +12,7 @@
   <img src="https://img.shields.io/npm/v/%40domain-first%2Ftypes" alt="version">
   <img src='https://img.shields.io/badge/test%20coverage-100%25-brightgreen'>
   <img src="https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white?style=for-the-badge" alt="size">
+  <img src="https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release" alt="semver">
   <img src="https://img.shields.io/npm/l/%40domain-first%2Ftypes" alt="license">
 </p>
 
