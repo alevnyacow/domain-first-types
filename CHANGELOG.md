@@ -1,3 +1,10 @@
+## [5.1.1](https://github.com/alevnyacow/domain-first-types/compare/v5.1.0...v5.1.1) (2026-09-03)
+
+
+### Bug Fixes
+
+* `schema` field ([bf3ac11](https://github.com/alevnyacow/domain-first-types/commit/bf3ac116b4527844b6f426202411f8c22724dca2))
+
 # [5.1.0](https://github.com/alevnyacow/domain-first-types/compare/v5.0.8...v5.1.0) (2026-09-03)
 
 
