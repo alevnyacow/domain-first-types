@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/alevnyacow/domain-first-types/compare/v5.0.8...v5.1.0) (2026-09-03)
+
+
+### Features
+
+* added `snaphot` field ([81dbc96](https://github.com/alevnyacow/domain-first-types/commit/81dbc9640f64ba22cc466c0b6ee89b7405e5d3e2))
+
 ## [5.0.8](https://github.com/alevnyacow/domain-first-types/compare/v5.0.7...v5.0.8) (2026-08-15)
 
 
