@@ -58,7 +58,7 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
         }
     }
 
-    return DomainType as unknown as abstract new (
+    return DomainType as unknown as (abstract new (
         model: StandardSchemaV1.InferInput<ModelSchema>
     ) => DeepReadonly<
         StandardSchemaV1.InferOutput<ModelSchema> extends object
@@ -66,13 +66,14 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
             : {
                   value: StandardSchemaV1.InferOutput<ModelSchema>;
               }
-    > & {
-        schema: ModelSchema;
-    } & (StandardSchemaV1.InferOutput<ModelSchema> extends object
+    > &
+        (StandardSchemaV1.InferOutput<ModelSchema> extends object
             ? {
                   snapshot: () => StandardSchemaV1.InferOutput<ModelSchema>;
               }
-            : {});
+            : {})) & {
+        schema: ModelSchema;
+    };
 };
 
 export const domainType = <ModelSchema extends StandardSchemaV1>(
