@@ -11,9 +11,7 @@ test('zod', () => {
     const nonEmptyString = new ZodNonEmptyString('non-empty');
     expect(nonEmptyString.value).toBe('non-empty');
 
-    expect(() => new ZodNonEmptyString('')).toThrowError(
-        TypeParsingError
-    );
+    expect(() => new ZodNonEmptyString('')).toThrowError(TypeParsingError);
 
     class ZodUserData extends domainType(
         z.object({
@@ -53,9 +51,7 @@ test('valibot', () => {
     const nonEmptyString = new ValibotNonEmptyString('non-empty');
     expect(nonEmptyString.value).toBe('non-empty');
 
-    expect(() => new ValibotNonEmptyString('')).toThrowError(
-        TypeParsingError
-    );
+    expect(() => new ValibotNonEmptyString('')).toThrowError(TypeParsingError);
 
     class ValibotUserData extends domainType(
         v.object({
@@ -95,9 +91,7 @@ test('joi', () => {
     const nonEmptyString = new JoiNonEmptyString('non-empty');
     expect(nonEmptyString.value).toBe('non-empty');
 
-    expect(() => new JoiNonEmptyString('')).toThrowError(
-        TypeParsingError
-    );
+    expect(() => new JoiNonEmptyString('')).toThrowError(TypeParsingError);
 
     class JoiUserData extends domainType(
         Joi.object({
@@ -144,7 +138,7 @@ test('README example', () => {
     ) {
         withNewName = (name: string) => {
             return new User({
-                id: this.id,
+                ...this.snapshot(),
                 name
             });
         };

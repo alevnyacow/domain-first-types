@@ -15,10 +15,22 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
     class DomainType {
         public static readonly schema = getModelSchema(isInstanceOfThisType);
 
+        snapshot(): StandardSchemaV1.InferOutput<ModelSchema> {
+            // @ts-expect-error hidden field
+            const model: StandardSchemaV1.InferInput<ModelSchema> = this._model;
+
+            return model;
+        }
+
         constructor(model: StandardSchemaV1.InferInput<ModelSchema>) {
             const schema = (this.constructor as typeof DomainType).schema;
 
             const parsedModelData = parseSync(schema, model);
+
+            Object.defineProperty(this, '_model', {
+                value: parsedModelData,
+                configurable: false
+            });
 
             if (parsedModelData && typeof parsedModelData === 'object') {
                 for (const [key, value] of Object.entries(parsedModelData)) {
@@ -46,7 +58,7 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
         }
     }
 
-    return DomainType as unknown as (abstract new (
+    return DomainType as unknown as abstract new (
         model: StandardSchemaV1.InferInput<ModelSchema>
     ) => DeepReadonly<
         StandardSchemaV1.InferOutput<ModelSchema> extends object
@@ -54,7 +66,13 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
             : {
                   value: StandardSchemaV1.InferOutput<ModelSchema>;
               }
-    >) & { schema: ModelSchema };
+    > & {
+        schema: ModelSchema;
+    } & (StandardSchemaV1.InferOutput<ModelSchema> extends object
+            ? {
+                  snapshot: () => StandardSchemaV1.InferOutput<ModelSchema>;
+              }
+            : {});
 };
 
 export const domainType = <ModelSchema extends StandardSchemaV1>(

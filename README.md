@@ -58,7 +58,7 @@ class User extends domainType(
 ) {
     withNewName = (name: string) => {
         return new User({
-            id: this.id,
+            ...this.snapshot(),
             name,
         });
     };
