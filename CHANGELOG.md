@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/alevnyacow/domain-first-types/compare/v5.1.2...v5.2.0) (2026-10-02)
+
+
+### Features
+
+* `with` function for object-shaped types ([21fc73f](https://github.com/alevnyacow/domain-first-types/commit/21fc73fa646bb2a0bf47300fde4a9ab4d2624e3d))
+
 ## [5.1.2](https://github.com/alevnyacow/domain-first-types/compare/v5.1.1...v5.1.2) (2026-10-02)
 
 
