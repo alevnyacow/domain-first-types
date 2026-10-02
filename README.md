@@ -25,7 +25,7 @@ class Email extends domainType(z.email()) {
 }
 
 const email = new Email("john@example.com");
-email.value;  // "john@example.com"
+email.value; // "john@example.com"
 email.domain; // "example.com"
 
 new Email("not-an-email"); // throws TypeParsingError
@@ -81,10 +81,7 @@ class Money extends domainType(
         if (other.currency !== this.currency) {
             throw new Error("Currency mismatch");
         }
-        return new Money({
-            ...this.snapshot(),
-            amount: this.amount + other.amount,
-        });
+        return this.with({ amount: this.amount + other.amount });
     }
 }
 
@@ -101,10 +98,7 @@ class Order extends domainType(
         if (this.status !== "draft") {
             throw new Error(`Order is already ${this.status}`);
         }
-        return new Order({
-            ...this.snapshot(),
-            status: "paid",
-        });
+        return this.with({ status: "paid" });
     }
 }
 
@@ -117,8 +111,8 @@ const order = new Order({
 
 const paid = order.pay();
 
-order.status;         // "draft": original is untouched
-paid.status;          // "paid"
+order.status; // "draft": original is untouched
+paid.status; // "paid"
 paid.customer.domain; // "example.com"
 
 // ❌ TS error, and a TypeError at runtime
@@ -127,14 +121,14 @@ order.status = "shipped";
 
 What you get from this:
 
-| | |
-|---|---|
-| ✅ **Always valid** | The constructor runs the schema. You can't create an invalid instance. |
-| 🔒 **Immutable** | Fields are deeply `readonly` in TypeScript and non-writable at runtime. |
-| 🧠 **Full inference** | Constructor arguments and fields come from the schema. You don't write types twice. |
-| 🧩 **Behavior lives with data** | It's a regular class, so you can add methods, getters and static factories. |
-| 🔌 **No lock-in** | Works with any Standard Schema library, and you can mix them. |
-| 🪶 **Tiny** | A thin layer over your schema library. |
+|                                 |                                                                                     |
+| ------------------------------- | ----------------------------------------------------------------------------------- |
+| ✅ **Always valid**             | The constructor runs the schema. You can't create an invalid instance.              |
+| 🔒 **Immutable**                | Fields are deeply `readonly` in TypeScript and non-writable at runtime.             |
+| 🧠 **Full inference**           | Constructor arguments and fields come from the schema. You don't write types twice. |
+| 🧩 **Behavior lives with data** | It's a regular class, so you can add methods, getters and static factories.         |
+| 🔌 **No lock-in**               | Works with any Standard Schema library, and you can mix them.                       |
+| 🪶 **Tiny**                     | A thin layer over your schema library.                                              |
 
 # Guide
 
@@ -156,8 +150,8 @@ class Age extends domainType(z.number().int().min(0)) {
 }
 
 UserId.generate().value; // "3f1c…"
-new Age(21).isAdult;     // true
-new Age(-1);             // throws TypeParsingError
+new Age(21).isAdult; // true
+new Age(-1); // throws TypeParsingError
 ```
 
 Functions can now ask for exactly what they need:
@@ -175,7 +169,13 @@ sendWelcome(new Email("john@example.com"));
 
 ## Entities and immutable updates
 
-When the schema describes an object, every field becomes a readonly property on the instance. `snapshot()` returns the underlying data, so you can build an updated copy:
+When the schema describes an object, every field becomes a readonly property on the instance.
+
+### Updating with `with()`
+
+To change something, call `with()`: it takes any subset of fields and returns a new, validated instance. The original stays untouched.
+
+> `with()` is available only on domain types built from object schemas. Primitive value objects like `Email` or `Age` don't have it: just create a new instance instead.
 
 ```ts
 class User extends domainType(
@@ -187,7 +187,7 @@ class User extends domainType(
 ) {
     rename(name: string) {
         // validated again
-        return new User({ ...this.snapshot(), name });
+        return this.with({ name });
     }
 }
 
@@ -200,6 +200,29 @@ const user = new User({
 user.rename("Jane").name; // "Jane"
 // throws: business rules hold for every copy
 user.rename("");
+```
+
+`with()` returns an instance of the class it was called on, so it works with inheritance too. Both the type and the runtime class are preserved:
+
+```ts
+class Admin extends User {
+    get canBan() {
+        return true;
+    }
+}
+
+const admin = new Admin({ ...user.snapshot() }).rename("Root");
+
+admin instanceof Admin; // true
+admin.canBan; // true, typed as Admin
+```
+
+### Raw data with `snapshot()`
+
+If you need the raw data, `snapshot()` returns it:
+
+```ts
+user.snapshot(); // { id: UserId, name: "John", email: Email }
 ```
 
 ## Parse once, at the boundary
@@ -286,22 +309,24 @@ User.schema; // the original Zod schema
 
 # API
 
-| Export | Description |
-|---|---|
-| `domainType(schema)` | Returns a base class to `extend`. Its constructor validates input with `schema`. |
-| `recursiveDomainType((isSelf) => schema)` | The same, for self-referencing types. `isSelf` is a type guard for instances of the class being defined. |
-| `instance.value` | The parsed value, for primitive schemas. |
-| `instance.<field>` | Readonly fields, for object schemas. |
-| `instance.snapshot()` | The parsed data, for object schemas. Useful for creating updated copies. |
-| `Class.schema` | The original schema. |
-| `TypeParsingError` | Thrown on invalid input. `e.details.parsingIssues` and `e.details.value` hold the issues and the rejected input. |
-| `AsyncSchemaInSyncParsingError` | Thrown if the schema needs async validation, since constructors are synchronous. |
-| `DeepReadonly<T>` | The helper type used for instance fields. |
+| Export                                    | Description                                                                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `domainType(schema)`                      | Returns a base class to `extend`. Its constructor validates input with `schema`.                                               |
+| `recursiveDomainType((isSelf) => schema)` | The same, for self-referencing types. `isSelf` is a type guard for instances of the class being defined.                       |
+| `instance.value`                          | The parsed value, for primitive schemas.                                                                                       |
+| `instance.<field>`                        | Readonly fields, for object schemas.                                                                                           |
+| `instance.with(changes)`                  | Returns a new validated instance of the same class with `changes` (a partial of the schema input) applied, for object schemas. |
+| `instance.snapshot()`                     | The parsed data, for object schemas.                                                                                           |
+| `Class.schema`                            | The original schema.                                                                                                           |
+| `TypeParsingError`                        | Thrown on invalid input. `e.details.parsingIssues` and `e.details.value` hold the issues and the rejected input.               |
+| `AsyncSchemaInSyncParsingError`           | Thrown if the schema needs async validation, since constructors are synchronous.                                               |
+| `DeepReadonly<T>`                         | The helper type used for instance fields.                                                                                      |
 
 # Good to know
 
 - **Validation is synchronous.** Constructors can't be `async`, so schemas with async refinements throw `AsyncSchemaInSyncParsingError`.
 - **Transforms are supported.** The constructor accepts the schema's input type, and the instance holds the output type. For example, with `z.string().trim()` the instance stores the trimmed string.
+- **`with()` calls the subclass constructor with a single model argument.** If a subclass changes the constructor signature, `with()` won't work for it.
 - **Runtime immutability is shallow.** Top-level fields can't be reassigned at runtime. Nested plain objects are `readonly` only at the type level. To make nested parts immutable at runtime, model them as domain types too.
 
 # License

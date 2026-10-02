@@ -22,6 +22,17 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
             return model;
         }
 
+        with(changes: Partial<StandardSchemaV1.InferInput<ModelSchema>>): this {
+            const Constructor = this.constructor as new (
+                model: StandardSchemaV1.InferInput<ModelSchema>
+            ) => this;
+
+            return new Constructor({
+                ...(this.snapshot() as object),
+                ...changes
+            } as StandardSchemaV1.InferInput<ModelSchema>);
+        }
+
         constructor(model: StandardSchemaV1.InferInput<ModelSchema>) {
             const schema = (this.constructor as typeof DomainType).schema;
 
@@ -70,6 +81,10 @@ const createDomainType = <ModelSchema extends StandardSchemaV1>(
         (StandardSchemaV1.InferOutput<ModelSchema> extends object
             ? {
                   snapshot: () => StandardSchemaV1.InferOutput<ModelSchema>;
+                  with: <Instance>(
+                      this: Instance,
+                      changes: Partial<StandardSchemaV1.InferInput<ModelSchema>>
+                  ) => Instance;
               }
             : {})) & {
         schema: ModelSchema;

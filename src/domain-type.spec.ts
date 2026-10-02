@@ -182,3 +182,39 @@ test('recursive', () => {
     console.log(nodeWithLink);
     expect(true).toBe(true);
 });
+
+test('with', () => {
+    class User extends domainType(
+        z.object({
+            name: z.string().nonempty(),
+            age: z.int().positive()
+        })
+    ) {
+        get isAdult() {
+            return this.age >= 18;
+        }
+    }
+
+    const user = new User({ name: 'John', age: 17 });
+    const olderUser = user.with({ age: 18 });
+
+    expect(olderUser).toBeInstanceOf(User);
+    expect(olderUser).not.toBe(user);
+    expect(olderUser.isAdult).toBe(true);
+    expect(olderUser).toEqual({ name: 'John', age: 18 });
+    expect(user).toEqual({ name: 'John', age: 17 });
+
+    expect(() => user.with({ age: -1 })).toThrowError(TypeParsingError);
+
+    class Admin extends User {
+        get role() {
+            return 'admin' as const;
+        }
+    }
+
+    const admin = new Admin({ name: 'Jane', age: 30 }).with({ name: 'Ann' });
+
+    expect(admin).toBeInstanceOf(Admin);
+    expect(admin.role).toBe('admin');
+    expect(admin.name).toBe('Ann');
+});
