@@ -1,19 +1,12 @@
-<p align="center">
-    Domain First Types
-</p>
+# Domain First Types
 
-<p align="center">
-  <img src="https://img.shields.io/npm/v/%40domain-first%2Ftypes" alt="version">
-  <img src='https://img.shields.io/badge/test%20coverage-100%25-brightgreen'>
-  <img src="https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white?style=for-the-badge" alt="size">
-  <img src="https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release" alt="semver">
-  <img src="https://img.shields.io/npm/l/%40domain-first%2Ftypes" alt="license">
-</p>
+<img src="https://img.shields.io/npm/v/%40domain-first%2Ftypes" alt="version">
+<img src='https://img.shields.io/badge/test%20coverage-100%25-brightgreen'>
+<img src="https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white?style=for-the-badge" alt="size">
+<img src="https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release" alt="semver">
+<img src="https://img.shields.io/npm/l/%40domain-first%2Ftypes" alt="license">
 
-<p align="center">
-    <b>Turn your Zod / Valibot / any Standard Schema into real domain classes.</b><br>
-    Validated on creation. Immutable. Fully typed. With your business logic inside.
-</p>
+Turn your Zod / Valibot / any Standard Schema into real domain classes.
 
 ```ts
 class Email extends domainType(z.email()) {
@@ -31,7 +24,7 @@ new Email("not-an-email"); // throws TypeParsingError
 
 One line turns a schema into a class. If you have an `Email`, it is valid. You don't need to check it again.
 
-# Installation
+## Installation
 
 ```
 npm i @domain-first/types
@@ -39,7 +32,7 @@ npm i @domain-first/types
 
 Use the schema library you already have. Anything that implements [Standard Schema](https://standardschema.dev) works, including **Zod**, **Valibot**, **ArkType**, **Joi** and more.
 
-# Why?
+## Why?
 
 This is how domain data usually looks in a TypeScript codebase:
 
@@ -128,9 +121,9 @@ What you get from this:
 | 🔌 **No lock-in**               | Works with any Standard Schema library, and you can mix them.                       |
 | 🪶 **Tiny**                     | A thin layer over your schema library.                                              |
 
-# Guide
+## Guide
 
-## Value objects from primitives
+### Value objects from primitives
 
 When the schema describes a primitive, the result is exposed as `.value`:
 
@@ -165,11 +158,11 @@ sendWelcome("john@example.com");
 sendWelcome(new Email("john@example.com"));
 ```
 
-## Entities and immutable updates
+### Entities and immutable updates
 
 When the schema describes an object, every field becomes a readonly property on the instance.
 
-### Updating with `with()`
+#### Updating with `with()`
 
 To change something, call `with()`: it takes any subset of fields and returns a new, validated instance. The original stays untouched.
 
@@ -215,7 +208,7 @@ admin instanceof Admin; // true
 admin.canBan; // true, typed as Admin
 ```
 
-### Raw data with `snapshot()`
+#### Raw data with `snapshot()`
 
 If you need the raw data, `snapshot()` returns it:
 
@@ -223,7 +216,7 @@ If you need the raw data, `snapshot()` returns it:
 user.snapshot(); // { id: UserId, name: "John", email: Email }
 ```
 
-## Parse once, at the boundary
+### Parse once, at the boundary
 
 Create domain objects where untrusted data comes in, such as an HTTP handler, a queue consumer or a DB mapper. Everything after that point works with valid objects:
 
@@ -253,7 +246,7 @@ app.post("/users", (req, res) => {
 });
 ```
 
-## Bring any schema library
+### Bring any schema library
 
 ```ts
 import * as v from "valibot";
@@ -269,7 +262,7 @@ class Age extends domainType(
 
 Zod, Valibot, ArkType, Joi and the rest all work the same way. You can even mix them inside one model.
 
-## Recursive types
+### Recursive types
 
 Use `recursiveDomainType` for trees, linked lists and anything else that refers to its own type:
 
@@ -297,7 +290,7 @@ const keyboards = new Category({
 keyboards.path; // "Electronics / Keyboards"
 ```
 
-## Reusing the schema
+### Reusing the schema
 
 Every domain class exposes the schema it was built from, so you can reuse it for forms, OpenAPI generation or anything else:
 
@@ -305,7 +298,7 @@ Every domain class exposes the schema it was built from, so you can reuse it for
 User.schema; // the original Zod schema
 ```
 
-# API
+## API
 
 | Export                                    | Description                                                                                                                    |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -320,13 +313,13 @@ User.schema; // the original Zod schema
 | `AsyncSchemaInSyncParsingError`           | Thrown if the schema needs async validation, since constructors are synchronous.                                               |
 | `DeepReadonly<T>`                         | The helper type used for instance fields.                                                                                      |
 
-# Good to know
+## Good to know
 
 - **Validation is synchronous.** Constructors can't be `async`, so schemas with async refinements throw `AsyncSchemaInSyncParsingError`.
 - **Transforms are supported.** The constructor accepts the schema's input type, and the instance holds the output type. For example, with `z.string().trim()` the instance stores the trimmed string.
 - **`with()` calls the subclass constructor with a single model argument.** If a subclass changes the constructor signature, `with()` won't work for it.
 - **Runtime immutability is shallow.** Top-level fields can't be reassigned at runtime. Nested plain objects are `readonly` only at the type level. To make nested parts immutable at runtime, model them as domain types too.
 
-# License
+## License
 
 MIT
