@@ -1,3 +1,10 @@
+## [5.2.1](https://github.com/alevnyacow/domain-first-types/compare/v5.2.0...v5.2.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* added homepage ([5579cf6](https://github.com/alevnyacow/domain-first-types/commit/5579cf62f5206a89e94ab2dfb1a9d9aa203de633))
+
 # [5.2.0](https://github.com/alevnyacow/domain-first-types/compare/v5.1.2...v5.2.0) (2026-10-02)
 
 
