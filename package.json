@@ -15,7 +15,7 @@
         "zod",
         "valibot"
     ],
-    "homepage": "https://codesandbox.io/p/devbox/async-cache-d8crnx?file=%2Findex.js%3A8%2C65",
+    "homepage": "https://domain-first-landing.vercel.app/types/",
     "version": "5.2.0",
     "type": "module",
     "repository": {

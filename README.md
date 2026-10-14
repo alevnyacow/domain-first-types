@@ -1,12 +1,5 @@
 <p align="center">
-    <picture>
-        <img src='https://raw.githubusercontent.com/alevnyacow/domain-first-types/refs/heads/main/logo.svg?sanitize=true'>
-    </picture>
-</p>
-
-<p align="center">
-    <b>Turn your Zod / Valibot / any Standard Schema into real domain classes.</b><br>
-    Validated on creation. Immutable. Fully typed. With your business logic inside.
+    Domain First Types
 </p>
 
 <p align="center">
@@ -15,6 +8,11 @@
   <img src="https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white?style=for-the-badge" alt="size">
   <img src="https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release" alt="semver">
   <img src="https://img.shields.io/npm/l/%40domain-first%2Ftypes" alt="license">
+</p>
+
+<p align="center">
+    <b>Turn your Zod / Valibot / any Standard Schema into real domain classes.</b><br>
+    Validated on creation. Immutable. Fully typed. With your business logic inside.
 </p>
 
 ```ts
