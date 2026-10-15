@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/alevnyacow/domain-first-types/compare/v5.2.3...v6.0.0) (2026-10-15)
+
+
+### Features
+
+* of, snapshot getter, API.md ([99a0bd8](https://github.com/alevnyacow/domain-first-types/commit/99a0bd82d4d1db3c2044f71e78360279f5ea34a6))
+
+
+### BREAKING CHANGES
+
+* new contract
+
 ## [5.2.3](https://github.com/alevnyacow/domain-first-types/compare/v5.2.2...v5.2.3) (2026-10-15)
 
 
