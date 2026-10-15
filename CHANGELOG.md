@@ -1,3 +1,10 @@
+## [5.2.3](https://github.com/alevnyacow/domain-first-types/compare/v5.2.2...v5.2.3) (2026-10-15)
+
+
+### Bug Fixes
+
+* icons in <p/> ([0327dca](https://github.com/alevnyacow/domain-first-types/commit/0327dca0378c96807f44eee16448d5fea48bf31f))
+
 ## [5.2.2](https://github.com/alevnyacow/domain-first-types/compare/v5.2.1...v5.2.2) (2026-10-14)
 
 
