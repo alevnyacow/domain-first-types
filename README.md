@@ -10,317 +10,135 @@
 
 Turn your Zod / Valibot / any Standard Schema into real domain classes.
 
-```ts
-class Email extends domainType(z.email()) {
-    get domain() {
-        return this.value.split("@")[1];
-    }
-}
+## What is it?
 
-const email = new Email("john@example.com");
-email.value; // "john@example.com"
-email.domain; // "example.com"
+In most TypeScript codebases domain data is a bag of `string`s and `number`s. Validation is optional, anyone can mutate anything, and the rules about an order live in services and helpers instead of on the order itself.
 
-new Email("not-an-email"); // throws TypeParsingError
-```
+Domain First Types makes **the schema the class**. One line turns a schema into a base class: every instance is validated on creation, its fields are readonly, its types are inferred from the schema, and you add behavior as regular methods. If you have an `Email`, it is valid. You don't need to check it again.
 
-One line turns a schema into a class. If you have an `Email`, it is valid. You don't need to check it again.
-
-## Installation
+It works with any [Standard Schema](https://standardschema.dev) library: Zod, Valibot, ArkType, Joi and more.
 
 ```
 npm i @domain-first/types
 ```
 
-Use the schema library you already have. Anything that implements [Standard Schema](https://standardschema.dev) works, including **Zod**, **Valibot**, **ArkType**, **Joi** and more.
+## API
 
-## Why?
+The full technical specification lives in [API.md](./API.md).
 
-This is how domain data usually looks in a TypeScript codebase:
+## Guide
 
-```ts
-type Order = {
-    id: string;
-    customerEmail: string;
-    total: number;
-    status: string;
-};
+### How to declare
 
-function pay(order: Order) {
-    if (order.status !== "draft") throw new Error("...");
-    // anyone can mutate anything, anywhere
-    order.status = "paid";
-}
-```
-
-- **Everything is a `string`.** Nothing stops you from passing an unchecked user input where a checked email is expected.
-- **Validation is optional.** The schema exists, but whether it ran depends on the code path, so every layer re-checks "just in case".
-- **Logic is scattered.** Rules about orders live in services, helpers and utils instead of on the order itself.
-- **Hand-written classes are boilerplate.** Private constructors, `static create()`, readonly fields, and a TypeScript type that duplicates the schema.
-
-With Domain-First Types, **the schema is the class**:
+Extend `domainType` with any schema. Add methods and getters as in a regular class.
 
 ```ts
 import { domainType } from "@domain-first/types";
 import { z } from "zod";
 
-class Money extends domainType(
-    z.object({
-        amount: z.number().int().nonnegative(),
-        currency: z.enum(["USD", "EUR"]),
-    }),
-) {
-    add(other: Money) {
-        if (other.currency !== this.currency) {
-            throw new Error("Currency mismatch");
-        }
-        return this.with({ amount: this.amount + other.amount });
+class Email extends domainType(z.email()) {
+    get domain() {
+        return this.snapshot.split("@")[1];
     }
 }
 
-class Order extends domainType(
+class User extends domainType(
     z.object({
-        id: z.uuid(),
-        // value objects compose naturally
-        customer: z.instanceof(Email),
-        total: z.instanceof(Money),
-        status: z.enum(["draft", "paid", "shipped"]),
+        name: z.string().nonempty(),
+        email: z.instanceof(Email),
     }),
-) {
-    pay() {
-        if (this.status !== "draft") {
-            throw new Error(`Order is already ${this.status}`);
-        }
-        return this.with({ status: "paid" });
-    }
-}
-
-const order = new Order({
-    id: crypto.randomUUID(),
-    customer: new Email("john@example.com"),
-    total: new Money({ amount: 4200, currency: "USD" }),
-    status: "draft",
-});
-
-const paid = order.pay();
-
-order.status; // "draft": original is untouched
-paid.status; // "paid"
-paid.customer.domain; // "example.com"
-
-// ❌ TS error, and a TypeError at runtime
-order.status = "shipped";
+) {}
 ```
 
-What you get from this:
+### How to create
 
-|                                 |                                                                                     |
-| ------------------------------- | ----------------------------------------------------------------------------------- |
-| ✅ **Always valid**             | The constructor runs the schema. You can't create an invalid instance.              |
-| 🔒 **Immutable**                | Fields are deeply `readonly` in TypeScript and non-writable at runtime.             |
-| 🧠 **Full inference**           | Constructor arguments and fields come from the schema. You don't write types twice. |
-| 🧩 **Behavior lives with data** | It's a regular class, so you can add methods, getters and static factories.         |
-| 🔌 **No lock-in**               | Works with any Standard Schema library, and you can mix them.                       |
-| 🪶 **Tiny**                     | A thin layer over your schema library.                                              |
+Use the static `of`. It validates the input and throws on invalid data. `new` is not available.
 
-## Guide
+```ts
+const email = Email.of("john@example.com");
+const user = User.of({ name: "John", email });
 
-### Value objects from primitives
+Email.of("not-an-email"); // throws TypeParsingError
+```
 
-When the schema describes a primitive, the result is exposed as `.value`:
+### How to read
+
+Fields of object schemas are readonly properties. `snapshot` holds the parsed data of any domain type.
+
+```ts
+user.name; // "John"
+user.email.domain; // "example.com"
+
+email.snapshot; // "john@example.com"
+user.snapshot; // { name: "John", email: Email }
+
+user.name = "Jane"; // TS error, and a TypeError at runtime
+```
+
+### How to update
+
+Instances are immutable: updates return a new validated instance of the same class.
+
+```ts
+class Counter extends domainType(z.number().int().nonnegative()) {
+    get incremented() {
+        // `of` takes an updater for any domain type
+        return this.of((current) => current + 1);
+    }
+}
+
+Counter.of(1).incremented.snapshot; // 2
+
+// `with` merges changes into object schemas
+user.with({ name: "Jane" }).name; // "Jane"
+user.name; // "John": original is untouched
+```
+
+### How to add factories
+
+Build static factories on top of `of`.
 
 ```ts
 class UserId extends domainType(z.uuid()) {
     static generate() {
-        return new UserId(crypto.randomUUID());
-    }
-}
-
-class Age extends domainType(z.number().int().min(0)) {
-    get isAdult() {
-        return this.value >= 18;
-    }
-}
-
-UserId.generate().value; // "3f1c…"
-new Age(21).isAdult; // true
-new Age(-1); // throws TypeParsingError
-```
-
-Functions can now ask for exactly what they need:
-
-```ts
-function sendWelcome(to: Email) {
-    // no need to validate `to` here
-}
-
-// ❌ TS error: string is not an Email
-sendWelcome("john@example.com");
-// ✅
-sendWelcome(new Email("john@example.com"));
-```
-
-### Entities and immutable updates
-
-When the schema describes an object, every field becomes a readonly property on the instance.
-
-#### Updating with `with()`
-
-To change something, call `with()`: it takes any subset of fields and returns a new, validated instance. The original stays untouched.
-
-> `with()` is available only on domain types built from object schemas. Primitive value objects like `Email` or `Age` don't have it: just create a new instance instead.
-
-```ts
-class User extends domainType(
-    z.object({
-        id: z.instanceof(UserId),
-        name: z.string().nonempty(),
-        email: z.instanceof(Email),
-    }),
-) {
-    rename(name: string) {
-        // validated again
-        return this.with({ name });
-    }
-}
-
-const user = new User({
-    id: UserId.generate(),
-    name: "John",
-    email: new Email("john@example.com"),
-});
-
-user.rename("Jane").name; // "Jane"
-// throws: business rules hold for every copy
-user.rename("");
-```
-
-`with()` returns an instance of the class it was called on, so it works with inheritance too. Both the type and the runtime class are preserved:
-
-```ts
-class Admin extends User {
-    get canBan() {
-        return true;
-    }
-}
-
-const admin = new Admin({ ...user.snapshot() }).rename("Root");
-
-admin instanceof Admin; // true
-admin.canBan; // true, typed as Admin
-```
-
-#### Raw data with `snapshot()`
-
-If you need the raw data, `snapshot()` returns it:
-
-```ts
-user.snapshot(); // { id: UserId, name: "John", email: Email }
-```
-
-### Parse once, at the boundary
-
-Create domain objects where untrusted data comes in, such as an HTTP handler, a queue consumer or a DB mapper. Everything after that point works with valid objects:
-
-```ts
-import { TypeParsingError } from "@domain-first/types";
-
-app.post("/users", (req, res) => {
-    try {
-        const user = new User({
-            id: UserId.generate(),
-            name: req.body.name,
-            email: new Email(req.body.email),
-        });
-
-        // no more defensive checks downstream
-        userService.register(user);
-        res.status(201).end();
-    } catch (e) {
-        if (e instanceof TypeParsingError) {
-            // standard schema issues + the original value
-            return res
-                .status(400)
-                .json({ issues: e.details.parsingIssues });
-        }
-        throw e;
-    }
-});
-```
-
-### Bring any schema library
-
-```ts
-import * as v from "valibot";
-
-class Age extends domainType(
-    v.pipe(v.number(), v.integer(), v.minValue(0)),
-) {
-    get isAdult() {
-        return this.value >= 18;
+        return UserId.of(crypto.randomUUID());
     }
 }
 ```
 
-Zod, Valibot, ArkType, Joi and the rest all work the same way. You can even mix them inside one model.
+### How to reference the type itself
 
-### Recursive types
-
-Use `recursiveDomainType` for trees, linked lists and anything else that refers to its own type:
+Use `recursiveDomainType` for trees and other self-referencing models.
 
 ```ts
 import { recursiveDomainType } from "@domain-first/types";
 
 class Category extends recursiveDomainType((isCategory) =>
     z.object({
-        name: z.string().nonempty(),
+        name: z.string(),
         parent: z.custom<Category>(isCategory).optional(),
     }),
-) {
-    get path(): string {
-        return this.parent
-            ? `${this.parent.path} / ${this.name}`
-            : this.name;
-    }
-}
+) {}
 
-const keyboards = new Category({
-    name: "Keyboards",
-    parent: new Category({ name: "Electronics" }),
-});
-
-keyboards.path; // "Electronics / Keyboards"
+Category.of({ name: "Keyboards", parent: Category.of({ name: "Electronics" }) });
 ```
 
-### Reusing the schema
+### How to handle invalid data
 
-Every domain class exposes the schema it was built from, so you can reuse it for forms, OpenAPI generation or anything else:
+Parse untrusted input once, at the boundary.
 
 ```ts
-User.schema; // the original Zod schema
+import { TypeParsingError } from "@domain-first/types";
+
+try {
+    Email.of(input);
+} catch (e) {
+    if (e instanceof TypeParsingError) {
+        e.details.parsingIssues; // Standard Schema issues
+        e.details.value; // the rejected input
+    }
+}
 ```
-
-## API
-
-| Export                                    | Description                                                                                                                    |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `domainType(schema)`                      | Returns a base class to `extend`. Its constructor validates input with `schema`.                                               |
-| `recursiveDomainType((isSelf) => schema)` | The same, for self-referencing types. `isSelf` is a type guard for instances of the class being defined.                       |
-| `instance.value`                          | The parsed value, for primitive schemas.                                                                                       |
-| `instance.<field>`                        | Readonly fields, for object schemas.                                                                                           |
-| `instance.with(changes)`                  | Returns a new validated instance of the same class with `changes` (a partial of the schema input) applied, for object schemas. |
-| `instance.snapshot()`                     | The parsed data, for object schemas.                                                                                           |
-| `Class.schema`                            | The original schema.                                                                                                           |
-| `TypeParsingError`                        | Thrown on invalid input. `e.details.parsingIssues` and `e.details.value` hold the issues and the rejected input.               |
-| `AsyncSchemaInSyncParsingError`           | Thrown if the schema needs async validation, since constructors are synchronous.                                               |
-| `DeepReadonly<T>`                         | The helper type used for instance fields.                                                                                      |
-
-## Good to know
-
-- **Validation is synchronous.** Constructors can't be `async`, so schemas with async refinements throw `AsyncSchemaInSyncParsingError`.
-- **Transforms are supported.** The constructor accepts the schema's input type, and the instance holds the output type. For example, with `z.string().trim()` the instance stores the trimmed string.
-- **`with()` calls the subclass constructor with a single model argument.** If a subclass changes the constructor signature, `with()` won't work for it.
-- **Runtime immutability is shallow.** Top-level fields can't be reassigned at runtime. Nested plain objects are `readonly` only at the type level. To make nested parts immutable at runtime, model them as domain types too.
 
 ## License
 
