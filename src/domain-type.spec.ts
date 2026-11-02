@@ -340,3 +340,24 @@ test('constructor is private', () => {
         DirectConstructionError
     );
 });
+
+test('discriminated union', () => {
+    class PostCreationWay extends domainType(
+        z.discriminatedUnion('way', [
+            z.object({ way: z.literal('from-scratch') }),
+            z.object({ way: z.literal('copy'), sourceId: z.string() })
+        ])
+    ) {}
+
+    const copy = PostCreationWay.of({ way: 'copy', sourceId: '42' });
+    expect(copy).toBeInstanceOf(PostCreationWay);
+    expect(copy.way).toBe('copy');
+
+    const snapshot = copy.snapshot;
+    if (snapshot.way === 'copy') {
+        expect(snapshot.sourceId).toBe('42');
+    }
+
+    const fromScratch = copy.of(() => ({ way: 'from-scratch' }));
+    expect(fromScratch.way).toBe('from-scratch');
+});
