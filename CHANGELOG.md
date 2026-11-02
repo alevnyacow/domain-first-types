@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/alevnyacow/domain-first-types/compare/v6.0.0...v6.0.1) (2026-11-02)
+
+
+### Bug Fixes
+
+* support union schemas (e.g. discriminatedUnion) ([4ad0de5](https://github.com/alevnyacow/domain-first-types/commit/4ad0de5f5124ca098772fadf4a4011926939a972))
+
 # [6.0.0](https://github.com/alevnyacow/domain-first-types/compare/v5.2.3...v6.0.0) (2026-10-15)
 
 
